@@ -13,3 +13,16 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Comment(models.Model):
+    author = models.ForeignKey('auth.User')
+    post = models.ForeignKey('Post')
+    text = models.TextField()
+    craeted = models.DateTimeField(
+        default=timezone.now)
+    modified = models.DateTimeField(
+        default=timezone.now)
+
+    def __str__(self):
+        return self.text
