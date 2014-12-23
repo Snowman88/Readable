@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post
-from .forms import PostForm
+from .forms import PostForm, CommentForm
 
 
 def post_list(request):
@@ -10,7 +10,9 @@ def post_list(request):
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    return render(request, 'blog/post_detail.html', {'post': post})
+    form = CommentForm()
+    # import ipdb; ipdb.set_trace()
+    return render(request, 'blog/post_detail.html', {'post': post, 'form': form})
 
 
 def post_new(request):
@@ -44,3 +46,17 @@ def post_remove(request, pk):
     post = get_object_or_404(Post, pk=pk)
     post.delete()
     return redirect('blog.views.post_list')
+
+
+def comment_new(request, post_id):
+    # import ipdb; ipdb.set_trace()
+    post = get_object_or_404(Post, pk=post_id)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.author = request.user
+            comment.post = post
+            comment.save()
+            return redirect('blog.views.post_detail', pk=post.id)
+    return redirect('blog.views.post_detail', pk=post_id)

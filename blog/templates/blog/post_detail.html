@@ -1,5 +1,5 @@
 {% extends 'blog/base.html' %}
-
+{% load crispy_forms_tags %}
 {% block content %}
     <div class="post">
         <h1>{{ post.title }}</h1>
@@ -11,5 +11,30 @@
             <br />
             posted by {{ post.author }}
         </div>
+    </div>
+    <h2>Comments</h2>
+    <div>
+        {% if not post.comment_set.all %}
+            No Comment yet
+        {% else %}
+        <ul>
+        {% for comment in post.comment_set.all %}
+            <li>
+                <div>
+                    {{ comment.text|linebreaks }}
+                    commented by {{ comment.author.username }}
+                </div>
+            </li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+
+    <h2>Add Comment</h2>
+    <div>
+    <form method="POST" action="{% url 'blog.views.comment_new' post_id=post.pk %}">
+        {#<input type="hidden" value="{{ post.pk }}" name="post_id" />#}
+        {% crispy form %}
+    </form>
     </div>
 {% endblock content %}
