@@ -9,6 +9,12 @@
                 {{ post.created }}
                 <br />
                 posted by {{ post.author }}
+                {% if post.comment_set.all %}
+                    <br />
+                    {% with total_comments=post.comment_set.count %}
+                    {{ total_comments }} comment{{ total_comments|pluralize }}
+                    {% endwith %}
+                {% endif %}
             </div>
         </div>
     {% endfor %}
