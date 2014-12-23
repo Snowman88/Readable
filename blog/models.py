@@ -26,3 +26,15 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text
+
+
+class Tag(models.Model):
+    post = models.ForeignKey('Post')
+    tag = models.CharField(max_length=20)
+
+    class Meta:
+        unique_together = ('post', 'tag',)
+
+
+    def __str__(self):
+        return self.tag

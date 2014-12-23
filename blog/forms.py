@@ -1,8 +1,9 @@
 from django import forms
-from django.forms import Textarea
-from .models import Post, Comment
+from django.forms import Textarea, CharField, TextInput
+from .models import Post, Comment, Tag
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, Field, Hidden
+from crispy_forms.layout import Submit
+# from django.forms.models import inlineformset_factory
 
 
 class PostForm(forms.ModelForm):
@@ -32,3 +33,12 @@ class CommentForm(forms.ModelForm):
         widgets = {
             'text': Textarea(attrs={'rows': 5, }),
         }
+
+
+class TagAreaForm(forms.Form):
+    tags = forms.CharField(widget=forms.Textarea(attrs={'rows': "2", }))
+
+    class Meta:
+        pass
+
+# PostTagFormSet = inlineformset_factory(Post, Tag)
