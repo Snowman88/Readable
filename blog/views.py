@@ -59,4 +59,6 @@ def comment_new(request, post_id):
             comment.post = post
             comment.save()
             return redirect('blog.views.post_detail', pk=post.id)
+        else:
+            print("Invalid")
     return redirect('blog.views.post_detail', pk=post_id)

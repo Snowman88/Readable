@@ -10,6 +10,12 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ('title', 'text',)
 
+    def clean_title(self):
+        title = self.cleaned_data["title"]
+        if "うん" in title:
+            raise forms.ValidationError("Inproper words in your text")
+        return title
+
 
 class CommentForm(forms.ModelForm):
     # post = forms.ModelChoiceField(queryset=Post.objects.all(),
