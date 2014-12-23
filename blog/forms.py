@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import Textarea
 from .models import Post, Comment
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Field, Hidden
@@ -22,3 +23,6 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ('text', )
+        widgets = {
+            'text': Textarea(attrs={'rows': 5, }),
+        }
