@@ -43,6 +43,7 @@ class Tag(models.Model):
 
     class Meta:
         unique_together = ('post', 'tag',)
+        ordering = ['pk']
 
 
     def __str__(self):
