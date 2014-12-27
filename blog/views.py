@@ -12,14 +12,15 @@ def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     form = CommentForm()
     # import ipdb; ipdb.set_trace()
-    return render(request, 'blog/post_detail.html', {'post': post, 'form': form})
+    params = {'post': post, 'form': form}
+    return render(request, 'blog/post_detail.html', params)
 
 
 def post_new(request):
     if request.method == 'POST':
         form = PostForm(request.POST)
         tags = request.POST["tags"]
-        targ_area_form = TagAreaForm(initial={'tags': tags})
+        tag_area_form = TagAreaForm(initial={'tags': tags})
         if form.is_valid():
             tag_list = tags.split(",")
             post = form.save(commit=False)
@@ -32,7 +33,8 @@ def post_new(request):
     else:
         form = PostForm()
         tag_area_form = TagAreaForm()
-    return render(request, 'blog/post_edit.html', {'form': form, 'tag_area_form': tag_area_form})
+    params = {'form': form, 'tag_area_form': tag_area_form}
+    return render(request, 'blog/post_edit.html', params)
 
 
 def post_edit(request, pk):
@@ -59,8 +61,9 @@ def post_edit(request, pk):
         form = PostForm(instance=post)
         tags = post.tag_set.all().order_by('pk')  # [tagobj, ...,...]
         tag_list = ", ".join([x.tag for x in tags])
-        tag_area_form = TagAreaForm(initial = {'tags': tag_list})
-    return render(request, 'blog/post_edit.html', {'form': form, 'tag_area_form': tag_area_form})
+        tag_area_form = TagAreaForm(initial={'tags': tag_list})
+    params = {'form': form, 'tag_area_form': tag_area_form}
+    return render(request, 'blog/post_edit.html', params)
 
 
 def post_remove(request, pk):
