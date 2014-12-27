@@ -18,14 +18,21 @@ def post_detail(request, pk):
 def post_new(request):
     if request.method == 'POST':
         form = PostForm(request.POST)
+        tags = request.POST["tags"]
+        targ_area_form = TagAreaForm(initial={'tags': tags})
         if form.is_valid():
+            tag_list = tags.split(",")
             post = form.save(commit=False)
             post.author = request.user
+
+            post.save()
+            post.set_tags(tag_list=tag_list)
             post.save()
             return redirect('blog.views.post_detail', pk=post.pk)
     else:
         form = PostForm()
-    return render(request, 'blog/post_edit.html', {'form': form})
+        tag_area_form = TagAreaForm()
+    return render(request, 'blog/post_edit.html', {'form': form, 'tag_area_form': tag_area_form})
 
 
 def post_edit(request, pk):
@@ -42,13 +49,7 @@ def post_edit(request, pk):
             # ex empty tag, prohibited words, etc
             # validation end
             Tag.objects.filter(post=post).delete()
-            for a_tag in tag_list:
-                a_tag = a_tag.strip()
-                if a_tag == "":
-                    continue
-                tag = Tag(tag=a_tag)
-                # tag.tag = a_tag
-                post.tag_set.add(tag)
+            post.set_tags(tag_list=tag_list)
             post = form.save(commit=False)
             post.author = request.user
             post.save()

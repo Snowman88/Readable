@@ -14,6 +14,15 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+    def set_tags(self, tag_list):
+        for a_tag in tag_list:
+            a_tag = a_tag.strip()
+            if a_tag == "":
+                continue
+            tag = Tag(tag=a_tag)
+            # tag.tag = a_tag
+            self.tag_set.add(tag)
+
 
 class Comment(models.Model):
     author = models.ForeignKey('auth.User')
