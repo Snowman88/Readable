@@ -45,6 +45,5 @@ class Tag(models.Model):
         unique_together = ('post', 'tag',)
         ordering = ['pk']
 
-
     def __str__(self):
         return self.tag
