@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post, Tag
 from .forms import PostForm, CommentForm, TagAreaForm
-
+from django.contrib import messages
 
 def post_list(request):
     posts = Post.objects.filter(created__isnull=False).order_by('created')
@@ -29,7 +29,10 @@ def post_new(request):
             post.save()
             post.set_tags(tag_list=tag_list)
             post.save()
+            messages.success(request, 'A New Post Has Been Created.')
             return redirect('blog.views.post_detail', pk=post.pk)
+        else:
+            messages.error(request, 'Please Read Error Messages.')
     else:
         form = PostForm()
         tag_area_form = TagAreaForm()
@@ -55,8 +58,10 @@ def post_edit(request, pk):
             post = form.save(commit=False)
             post.author = request.user
             post.save()
-
+            messages.success(request, 'Successfully Updated!')
             return redirect('blog.views.post_detail', pk=post.pk)
+        else:
+            messages.error(request, 'Please Read Error Messages.')
     else:
         form = PostForm(instance=post)
         tags = post.tag_set.all().order_by('pk')  # [tagobj, ...,...]
